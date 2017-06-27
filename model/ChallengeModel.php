@@ -34,14 +34,14 @@ function createCustomer($firstname, $lastname, $password, $address, $city, $zipc
 	return true;
 }
 
-function loginUser($username, $password)
+function loginUser($email, $password)
 {
 	$db = openDatabaseConnection();
 
-	$username = $_POST['username'];
+	$email = $_POST['email'];
 	$password = md5($_POST['password']);
 
-    $result1 = $db->prepare("SELECT * FROM users WHERE username = '$username' AND  password = '$password'");
+    $result1 = $db->prepare("SELECT * FROM customers WHERE email = '$email' AND  password = '$password'");
  	$result1->execute();
  	$row = $result1->fetch(PDO::FETCH_ASSOC);
  	$rowCount = $result1->rowCount();
@@ -50,8 +50,15 @@ function loginUser($username, $password)
 	{
 		$_SESSION['userId'] = $row['id'];
 		$_SESSION['logged in'] = true;
-		$_SESSION['username'] = $username;
-		$_SESSION['role'] = $row['role'];
+		$_SESSION['email'] = $email;
+		$_SESSION['firstname'] = $row['firstname'];
+		$_SESSION['lastname'] = $row['lastname'];
+		$_SESSION['address'] = $row['address'];
+		$_SESSION['city'] = $row['city'];
+		$_SESSION['zipcode'] = $row['zipcode'];
+		$_SESSION['telephone'] = $row['telephone'];
+		$_SESSION['mobile'] = $row['mobile'];
+
 		$db = null;
 		return true;
 	}

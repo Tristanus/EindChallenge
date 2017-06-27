@@ -8,23 +8,34 @@
 	<link rel="stylesheet" href="<?= URL ?>css/bootstrap-3.3.7.css">
 </head>
 <body>
+<body>
 	<nav class="navbar navbar-default">
-	    <div class="container-fluid">
-	        <div class="navbar-header">
-	            <a class="navbar-brand" href="<?= URL ?>home/index">Haarzager</a>
-	        </div>
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="<?= URL ?>home/index">HaarZager</a>
+            </div>
 
-	        <ul class="nav navbar-nav">
-	            <li><a href="<?= URL ?>home/index">Home</a></li>
-
+            <ul class="nav navbar-nav">
+                <li><a href="<?= URL ?>">Niet Klikken</a></li>
 	        </ul>
 
-	        <!-- navbar part that's on the right side -->
-	        <ul class="nav navbar-nav navbar-right">
-	            <li><a href="<?= URL ?>Challenge/login"><span class="glyphicon glyphicon-log-in"></span> Inloggen</a></li>
-	            <li><a href="<?= URL ?>Challenge/register"><span class="glyphicon glyphicon-log-in"></span> Registreren</a></li>
-	        </ul>
+            <!-- navbar part that's on the right side -->
+            <ul class="nav navbar-nav navbar-right">
 
-	    </div>
+<?php if(isset($_SESSION['logged in'])): ?>
+
+				<li><a>Welkom, <?= $_SESSION['firstname']; ?></a></li>
+				<li><a href="<?= URL ?>challenge/logout">Logout</a></li>
+
+<?php ; else: ?>
+
+            	<li><a href="<?= URL ?>challenge/register">Registreer</a></li>
+                <li><a href="<?= URL ?>challenge/login">Login</a></li>
+
+<?php endif; ?>
+
+            </ul>
+
+        </div>
 	</nav>
 

@@ -10,14 +10,14 @@ function login()
 		exit();
 	}
 	else {
-		if(isset($_POST["username"]) && isset($_POST["password"])) {
-			if(loginUser($_POST['username'], $_POST['password']))
+		if(isset($_POST["email"]) && isset($_POST["password"])) {
+			if(loginUser($_POST['email'], $_POST['password']))
 			{
 				header("Location:" . URL . "home/index");
 				exit();
 			}else{
 				render("challenge/login");
-				echo 'ownee het is een fout help';
+				echo 'Sorry, E-Mail and password don\'t match';
 				exit();
 			}
 		}
