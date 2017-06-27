@@ -44,18 +44,18 @@ function registerSave()
 	}
 	else 
 	{
-		if (empty($_POST['firstname']) || empty($_POST['lastname']) || empty($_POST['username']) || empty($_POST['password']) || empty($_POST['email']))
+		if (empty($_POST['firstname']) || empty($_POST['lastname']) || empty($_POST['password']) || empty($_POST['address']) || empty($_POST['city']) || empty($_POST['zipcode']) || empty($_POST['telephone']) || empty($_POST['mobile']) || empty($_POST['email']))
 		{
 			echo 'U heeft een veld niet ingevuld';
-			render("challenge/register");
+			// render("challenge/register");
 			exit();
 		}
 
 		// if fields are filled, call function
-		if (isset($_POST['firstname']) && isset($_POST['lastname']) && isset($_POST['username']) && isset($_POST['password']) && isset($_POST['email']))
+		if (isset($_POST['firstname']) && isset($_POST['lastname']) && isset($_POST['password']) && isset($_POST['address']) && isset($_POST['city']) && isset($_POST['zipcode']) && isset($_POST['telephone']) && isset($_POST['mobile']) && isset($_POST['email']))
 		{
-			createUser($_POST['firstname'], $_POST['lastname'], $_POST['username'],  $_POST['password'], $_POST['email']);
-			header("Location:" . URL . "home/index");
+			createCustomer($_POST['firstname'], $_POST['lastname'], $_POST['password'],  $_POST['address'], $_POST['city'], $_POST['zipcode'], $_POST['telephone'], $_POST['mobile'], $_POST['email']);
+			// header("Location:" . URL . "home/index");
 			exit();
 		}
 	}

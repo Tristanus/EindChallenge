@@ -1,35 +1,32 @@
 <?php
 
-function createUser($firstname, $lastname, $username, $password, $email)
+function createCustomer($firstname, $lastname, $password, $address, $city, $zipcode, $telephone, $mobile, $email)
 {
-	$firstname = isset($_POST['firstname']) ? $_POST['firstname'] : null;
-	$lastname = isset($_POST['lastname']) ? $_POST['lastname'] : null;
-	$username = isset($_POST['username']) ? $_POST['username'] : null;
-	$password = isset($_POST['password']) ? $_POST['password'] : null;
+	$firstname = $_POST['firstname'];
+	$lastname = $_POST['lastname'];
+	$password = $_POST['password'];
+	$address = $_POST['address'];
 	$hash = md5($password);
-	$email = isset($_POST['email']) ? $_POST['email'] : null;
-
-	if (isset($_POST['role']))
-	{
-		$role = $_POST['role'];
-	}
-	else
-	{
-		$role = "Student";
-	}
+	$city = $_POST['city'];
+	$zipcode = $_POST['zipcode'];
+	$telephone = $_POST['telephone'];
+	$mobile = $_POST['mobile'];
+	$email = $_POST['email'];
 	
 	$db = openDatabaseConnection();
 
-
-	$sql = "INSERT INTO users(firstname, lastname, username, password, email, role) VALUES (:firstname, :lastname, :username, :password, :email, :role)";
+	$sql = "INSERT INTO customers(firstname, lastname, password, address, city, zipcode, telephone, mobile, email) VALUES (:firstname, :lastname, :password, :address, :city, :zipcode, :telephone, :mobile, :email)";
 	$query = $db->prepare($sql);
 	$query->execute(array(
 		':firstname' => $firstname,
 		':lastname' => $lastname,
-		':username' => $username,
 		':password' => $hash,
-		':email' => $email,
-		':role' => $role
+		':address' => $address,
+		':city' => $city,
+		':zipcode' => $zipcode,
+		':telephone' => $telephone,
+		':mobile' => $mobile,
+		':email' => $email
 	));
 
 	$db = null;
