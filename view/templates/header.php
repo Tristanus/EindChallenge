@@ -15,6 +15,7 @@
             </div>
 
             <ul class="nav navbar-nav">
+            	<li><a href="<?= URL ?>challenge/pricelist">Prijslijst</a></li>
 
 <?php if(isset($_SESSION['logged in']) && $_SESSION['role'] == 'employee'): ?>
 
