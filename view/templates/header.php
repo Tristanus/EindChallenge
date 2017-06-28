@@ -42,3 +42,17 @@
             </ul>
         </div>
 	</nav>
+
+    <?php
+        // if errors found, print them
+        if (isset($_SESSION['errors']) && is_array($_SESSION['errors']) && sizeof($_SESSION['errors'])>0 ) {
+            echo '<div class="alert alert-danger alert-dismissable">
+                <strong>Fout!</strong> <ul>';
+            foreach($_SESSION['errors'] as $error) {
+                echo '<li>' . $error . '</li>';
+            }
+            echo '</ul></div>';
+            // errors are shown. now remove them from session
+            $_SESSION['errors'] = [];
+        }
+    ?>

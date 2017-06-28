@@ -5,7 +5,7 @@ require(ROOT . "model/ChallengeModel.php");
 function login()
 {	
 	if ( IsLoggedInSession()==true ) {
-		echo "U heeft al ingelogd!";
+		$_SESSION['errors'][] .= "U heeft al ingelogd!";
 		render("home/index");
 		exit();
 	}
@@ -17,7 +17,7 @@ function login()
 				exit();
 			}else{
 				render("challenge/login");
-				echo 'Sorry, E-Mail and password don\'t match';
+				$_SESSION['errors'][] .= "Sorry er is iets mis gegaan. Probeer opnieuw!";
 				exit();
 			}
 		}
@@ -32,43 +32,58 @@ function login()
 
 function register()
 {
-	render("challenge/register");
+	if ( IsLoggedInSession()==true ) {
+		$_SESSION['errors'][] .= "U heeft al ingelogd!";
+		render("home/index");
+		exit();
+	}
+	else{
+		render("challenge/register");
+	}	
 }
 
 function registerSave()
 {
 	if ( IsLoggedInSession()==true ) {
-		echo "U bent al ingelogd!";
+		$_SESSION['errors'][] .= "U heeft al ingelogd!";
 		render("home/index");
 		exit();
 	}
 	else 
 	{
-		if (empty($_POST['firstname']) || empty($_POST['lastname']) || empty($_POST['password']) || empty($_POST['address']) || empty($_POST['city']) || empty($_POST['zipcode']) || empty($_POST['telephone']) || empty($_POST['mobile']) || empty($_POST['email']))
+		if (empty($_POST['firstname']) || empty($_POST['lastname']) || empty($_POST['password']) || empty($_POST['address']) || empty($_POST['city']) || empty($_POST['zipcode']) || empty($_POST['telephone']) || empty($_POST['mobilephone']) || empty($_POST['email']))
 		{
-			echo 'U heeft een veld niet ingevuld';
+			$_SESSION['errors'][] .= "U heeft een veld niet ingevuld.";
 			render("challenge/register");
 			exit();
 		}
 
 		// if fields are filled, call function
-		if (isset($_POST['firstname']) && isset($_POST['lastname']) && isset($_POST['password']) && isset($_POST['address']) && isset($_POST['city']) && isset($_POST['zipcode']) && isset($_POST['telephone']) && isset($_POST['mobile']) && isset($_POST['email']))
+		if (isset($_POST['firstname']) && isset($_POST['lastname']) && isset($_POST['password']) && isset($_POST['address']) && isset($_POST['city']) && isset($_POST['zipcode']) && isset($_POST['telephone']) && isset($_POST['mobilephone']) && isset($_POST['email']))
 		{
-			createCustomer($_POST['firstname'], $_POST['lastname'], $_POST['password'],  $_POST['address'], $_POST['city'], $_POST['zipcode'], $_POST['telephone'], $_POST['mobile'], $_POST['email']);
+			createCustomer($_POST['firstname'], $_POST['lastname'], $_POST['password'], $_POST['address'], $_POST['city'], $_POST['zipcode'], $_POST['telephone'], $_POST['mobilephone'], $_POST['email']);
 			header("Location:" . URL . "home/index");
-			exit();
 		}
 	}
 }
 
 function create()
 {
-	render("challenge/create");
+	if (isset($_SESSION['logged in']) && $_SESSION['role'] == "employee")
+	{
+		render("challenge/create");
+	}
+	else
+	{
+		$_SESSION['errors'][] .= "U heeft geen toegang tot deze pagina.";
+		render("home/index");
+	}
+	
 }
 
 function createSave()
 {
-	if (!createEmployee($_POST['firstname'], $_POST['lastname'], $_POST['password'],  $_POST['telephone'], $_POST['mobile'], $_POST['email'])){
+	if (!createEmployee($_POST['firstname'], $_POST['lastname'], $_POST['telephone'],  $_POST['mobilephone'], $_POST['email'], $_POST['password'])) {
 		header("Location:" . URL . "error/index");
 		exit();
 	}
@@ -94,6 +109,7 @@ function editSave()
 	else
 	{
 		echo "Oops something went wrong!";
+		$_SESSION['errors'][] .= "Er is een fout opgetreden. Probeer opnieuw.";
 	}
 }
 
