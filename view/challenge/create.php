@@ -24,8 +24,8 @@
 								<input type="text" placeholder="Telefoon nummer" class="form-control" name="telephone">
 							</div>
 							<div class="col-sm-6 form-group">
-								<label for="mobilephone">Mobiel</label>
-								<input type="text" placeholder="Mobiel nummer" class="form-control" name="mobilephone">
+								<label for="mobile">Mobiel</label>
+								<input type="text" placeholder="Mobiel nummer" class="form-control" name="mobile">
 							</div>
 						</div>
 					<div class="form-group">

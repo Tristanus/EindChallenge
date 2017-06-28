@@ -143,6 +143,18 @@ function createErrorArray()
 	}
 }
 
+function createInfoArray()
+{
+	if (!isset($_SESSION['info']))
+	{
+		$_SESSION['info'] = [];
+	}
+	else
+	{
+		return true;
+	}
+}
+
 function LogOut()
 {
 	echo "Logged out";
@@ -153,19 +165,70 @@ function LogOut()
 	$_SESSION = [];
 }
 
-function getAllUsers()
+function getAllEmployees()
 {
 	$db = openDatabaseConnection();
 
-	$role = "Student";
-
-	$sql = "SELECT * FROM users";
+	$sql = "SELECT * FROM employees";
 	$query = $db->prepare($sql);
 	$query->execute();
 
 	$db = null;
 
 	return $query->fetchAll();
+}
+
+function createAppointment($_date, $_time, $employee_id)
+{
+	$_date = $_POST['_date'];
+	$_time = $_POST['_time'];
+	$employee_id = $_POST['employee_id'];
+	$customer_id = $_SESSION['userId'];
+	
+	$db = openDatabaseConnection();
+
+	$sql = "INSERT INTO appointments(_date, _time, employee_id, customer_id) VALUES (:_date, :_time, :employee_id, :customer_id)";
+	$query = $db->prepare($sql);
+	$query->execute(array(
+		':_date' => $_date,
+		':_time' => $_time,
+		':employee_id' => $employee_id,
+		':customer_id' => $customer_id
+	));
+
+	$db = null;
+	
+	return true;
+}
+
+function checkIfAppointmentExists($_date, $_time, $employee_id)
+{
+	$_date = $_POST['_date'];
+	$_time = $_POST['_time'];
+	$employee_id = $_POST['employee_id'];
+	
+	$db = openDatabaseConnection();
+
+	$sql = "SELECT * FROM appointments WHERE _date = '$_date' AND _time = '$_time' AND employee_id = '$employee_id'";
+	$query = $db->prepare($sql);
+	$query->execute(array(
+		':_date' => $_date,
+		':_time' => $_time,
+		':employee_id' => $employee_id,
+	));
+	$row = $query->fetch(PDO::FETCH_ASSOC);
+ 	$rowCount = $query->rowCount();
+
+	$db = null;
+	
+	if($rowCount > 0)
+	{
+		return 1;
+	}
+	else
+	{
+		return 0;
+	}
 }
 
 function getUser($id) 

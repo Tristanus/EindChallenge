@@ -37,9 +37,10 @@ function register()
 		render("home/index");
 		exit();
 	}
-	else{
+	else
+	{
 		render("challenge/register");
-	}	
+	}
 }
 
 function registerSave()
@@ -51,7 +52,7 @@ function registerSave()
 	}
 	else 
 	{
-		if (empty($_POST['firstname']) || empty($_POST['lastname']) || empty($_POST['password']) || empty($_POST['address']) || empty($_POST['city']) || empty($_POST['zipcode']) || empty($_POST['telephone']) || empty($_POST['mobilephone']) || empty($_POST['email']))
+		if (empty($_POST['firstname']) || empty($_POST['lastname']) || empty($_POST['password']) || empty($_POST['address']) || empty($_POST['city']) || empty($_POST['zipcode']) || empty($_POST['telephone']) || empty($_POST['mobile']) || empty($_POST['email']))
 		{
 			$_SESSION['errors'][] .= "U heeft een veld niet ingevuld.";
 			render("challenge/register");
@@ -59,9 +60,9 @@ function registerSave()
 		}
 
 		// if fields are filled, call function
-		if (isset($_POST['firstname']) && isset($_POST['lastname']) && isset($_POST['password']) && isset($_POST['address']) && isset($_POST['city']) && isset($_POST['zipcode']) && isset($_POST['telephone']) && isset($_POST['mobilephone']) && isset($_POST['email']))
+		if (isset($_POST['firstname']) && isset($_POST['lastname']) && isset($_POST['password']) && isset($_POST['address']) && isset($_POST['city']) && isset($_POST['zipcode']) && isset($_POST['telephone']) && isset($_POST['mobile']) && isset($_POST['email']))
 		{
-			createCustomer($_POST['firstname'], $_POST['lastname'], $_POST['password'], $_POST['address'], $_POST['city'], $_POST['zipcode'], $_POST['telephone'], $_POST['mobilephone'], $_POST['email']);
+			createCustomer($_POST['firstname'], $_POST['lastname'], $_POST['password'], $_POST['address'], $_POST['city'], $_POST['zipcode'], $_POST['telephone'], $_POST['mobile'], $_POST['email']);
 			header("Location:" . URL . "home/index");
 		}
 	}
@@ -83,7 +84,7 @@ function create()
 
 function createSave()
 {
-	if (!createEmployee($_POST['firstname'], $_POST['lastname'], $_POST['telephone'],  $_POST['mobilephone'], $_POST['email'], $_POST['password'])) {
+	if (!createEmployee($_POST['firstname'], $_POST['lastname'], $_POST['telephone'],  $_POST['mobile'], $_POST['email'], $_POST['password'])) {
 		header("Location:" . URL . "error/index");
 		exit();
 	}
@@ -91,19 +92,59 @@ function createSave()
 	header("Location:" . URL . "home/index");
 }
 
-function priceList(){
-	render("challenge/pricelist");
-}
-
-function delete($id)
+function priceList()
 {
-	if (!deleteUser($id))
+	render("challenge/priceList");
+}
+
+function makeAppointment()
+{
+	if (!IsLoggedInSession())
 	{
-		header("Location:" . URL . "error/index");
+		$_SESSION['errors'][] .= "U moet ingelogd zijn om een afspraak te maken.";
+		render("home/index");
 		exit();
 	}
+	else
+	{
+		render("challenge/makeAppointment", array(
+		'employees' => getAllEmployees()
+		));
+	}
+}
 
-	header("Location:" . URL . "home/index");
+function saveAppointment()
+{
+	if (!IsLoggedInSession())
+	{
+		$_SESSION['errors'][] .= "U moet ingelogd zijn om een afspraak te maken.";
+		render("home/index");
+		exit();
+	}
+	else 
+	{
+		if (empty($_POST['_date']) || empty($_POST['_time']) || empty($_POST['employee_id']))
+		{
+			$_SESSION['errors'][] .= "U heeft niet alle velden ingevuld.";
+			header("Location:" . URL . "challenge/makeAppointment");
+			exit();
+		}
+		// if fields are filled, call function
+		elseif(isset($_POST['_date']) && isset($_POST['_time']) && isset($_POST['employee_id']))
+		{
+			if(checkIfAppointmentExists($_POST['_date'], $_POST['_time'], $_POST['employee_id']) == false)
+			{
+				createAppointment($_POST['_date'], $_POST['_time'], $_POST['employee_id']);
+				$_SESSION['info'][] .= "U heeft gereserveerd voor een afspraak.";
+				header("Location:" . URL . "home/index");
+			}
+			else
+			{
+				$_SESSION['errors'][] .= "Deze tijd en datum zijn al bezet voor deze kapster.";
+				header("Location:" . URL . "challenge/makeAppointment");
+			}
+		}
+	}
 }
 
 function examsIndex()

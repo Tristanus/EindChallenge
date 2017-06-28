@@ -15,13 +15,19 @@
             </div>
 
             <ul class="nav navbar-nav">
-            	<li><a href="<?= URL ?>challenge/pricelist">Prijslijst</a></li>
 
 <?php if(isset($_SESSION['logged in']) && $_SESSION['role'] == 'employee'): ?>
 
                 <li><a href="<?= URL ?>challenge/create">Kapper toevoegen</a></li>
+                <li><a href="<?= URL ?>challenge/createAppointment">Maak een afspraak</a></li>
+
+<?php elseif(isset($_SESSION['logged in'])): ?>
+
+                <li><a href="<?= URL ?>challenge/makeAppointment">Maak een afspraak</a></li>
 
 <?php endif; ?>
+
+                <li><a href="<?= URL ?>challenge/priceList">Onze prijzen</a></li>
 
 	        </ul>
 
@@ -46,7 +52,8 @@
 
     <?php
         // if errors found, print them
-        if (isset($_SESSION['errors']) && is_array($_SESSION['errors']) && sizeof($_SESSION['errors'])>0 ) {
+        if (isset($_SESSION['errors']) && is_array($_SESSION['errors']) && sizeof($_SESSION['errors'])>0 )
+        {
             echo '<div class="alert alert-danger alert-dismissable">
                 <strong>Fout!</strong> <ul>';
             foreach($_SESSION['errors'] as $error) {
@@ -56,4 +63,18 @@
             // errors are shown. now remove them from session
             $_SESSION['errors'] = [];
         }
+    ?>
+
+    <?php
+    // if info messages found, print them
+    if (isset($_SESSION['info']) && is_array($_SESSION['info']) && sizeof($_SESSION['info'])>0 )
+    {
+        echo '<div class="alert alert-success alert-dismissable" id="alert-success-1"><strong>Gelukt!</strong> <ul>';
+        foreach($_SESSION['info'] as $info) {
+            echo '<li>' . $info . '</li>';
+        }
+        echo '</ul></div>';
+        // errors are shown. now remove them from session
+        $_SESSION['info'] = [];
+    }
     ?>
