@@ -146,33 +146,3 @@ function saveAppointment()
 		}
 	}
 }
-
-function examsIndex()
-{
-	if (isset($_SESSION['role']) && $_SESSION['role'] == "Docent")
-	{
-		render("challenge/exams", array(
-			'exams' => getAllExams()
-		));
-	}
-	else
-	{
-		render("home/index");
-	}
-}
-
-function createExam()
-{
-	render("challenge/createExam");
-}
-
-function createExamSave()
-{
-	if (!createNewExam($_POST['subject'], $_POST['_time'], $_POST['examinator_1'],  $_POST['examinator_2']))
-	{
-		header("Location:" . URL . "error/index");
-		exit();
-	}
-
-	header("Location:" . URL . "challenge/examsIndex");
-}
